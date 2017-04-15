@@ -5,36 +5,15 @@ const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'N
 const articles = ['The', 'A', 'An'];
 const homeList = document.querySelector("#bands");
 
-bands.sort((a, b) => {
-	let cleanA = checkForArticle(a);
-	let cleanB = checkForArticle(b);
-
-	if(cleanA < cleanB){
-		return -1;
-	} else if(cleanA > cleanB){
-		return 1;
-	} else {
-		return 0; 
-	}
-});
-
-function checkForArticle(dirtyString){
-
-	var cleanString = dirtyString;
-
-	for (var i = 0; i < articles.length; i++){
-		if (cleanString.startsWith(articles[i])){
-			cleanString = cleanString.slice((articles[i].length)).trim();
-		}
-	}
-	return cleanString;
+function stripArticle(name){
+	return name.replace(/^(the |an |a )/i, "").trim();
 }
 
-bands.forEach((el, i) => {
-	let newEl = document.createElement("LI");
-	let elText = document.createTextNode(el);
-	newEl.appendChild(elText);
-	homeList.appendChild(newEl);
-});
+const sortedBands = bands.sort((a, b) => stripArticle(a) > stripArticle(b) ? 1 : -1);
 
-console.log(bands);
+document.querySelector('#bands').innerHTML = 
+	  sortedBands
+	  	.map(band => `<li>${band}</li>`)
+	  	.join('');
+
+
